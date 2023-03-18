@@ -41,6 +41,7 @@
 {%- set meta = salt['pillar.get']('nomad:meta', {}) %}
 {%- set opts = salt['pillar.get']('nomad:options', {}) %}
 {%- set net_iface = salt['pillar.get']('nomad:network_interface', False) %}
+{%- set max_kill_timeout = salt['pillar.get']('nomad:max_kill_timeout', '180s') %}
 
 {#- consul-specific #}
 {%- set default_token = 'CONSUL_TOKEN_FOR_NOMAD' %}
@@ -121,6 +122,7 @@ client {
       {% for s in agent_servers %}"{{ s }}",
       {%- endfor %}
   ]
+  max_kill_timeout = "{{ max_kill_timeout }}"
   {% if meta %}meta = { {%- for k,v in meta.items() %}
     {{ k }} = "{{ v }}"
   {% endfor %}}

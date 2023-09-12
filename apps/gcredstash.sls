@@ -1,9 +1,9 @@
-{%- set version = 'v0.3.5' %}
+{%- set version = '0.4.3' %}
 {%- set executable = 'gcredstash-' ~ version ~ '-linux-amd64' %}
-{%- set gzip_archive = executable ~ '.gz' %}
-{%- set base_url = 'https://github.com/winebarrel/gcredstash/releases/download/' %}
-{%- set archive_url = base_url ~ version ~ '/' ~ gzip_archive %}
-{%- set checksum = 'e9b832763ea8dcd95f7a8b734cc576c22465d131eb1fa9b203cf8ee7fe1b6d2b829807e9b9e5ae7351ce60e46db1bab8eec94ff9fabcf56aba71ec120ff70239' %}
+{%- set gzip_archive = 'gcredstash_' ~ version ~ '_linux_x86_64.tar.gz' %}
+{%- set base_url = 'https://github.com/kgaughan/gcredstash/releases/download' %}
+{%- set archive_url = base_url ~ '/' ~ 'v' ~ version ~ '/' ~ gzip_archive %}
+{%- set checksum = '4384b17743e316e78c1a90c87cda5fdbb2cc00f7ec10a6042a7c83bc2dc9254e257058ad087d88a7dc0638b1063d20303449c7f7769ce67d41f4773f7ba72a05' %}
 
 gcredstash-archive:
   file.managed:
@@ -11,19 +11,21 @@ gcredstash-archive:
     - source: {{ archive_url }}
     - source_hash: sha512={{ checksum }}
     - unless: ls /usr/local/bin/{{ executable }}
-  module.run:
-    - name: archive.gunzip
-    - gzipfile: /usr/local/bin/{{ gzip_archive }}
-    - onchanges: [ { file: /usr/local/bin/{{ gzip_archive }} } ]
+  archive.extracted:
+    - name: /usr/local/bin/{{ executable }}
+    - source: /usr/local/bin/{{ gzip_archive }}
+    - if_missing: /usr/local/bin/{{ executable }}
+    - options: -z
+    - enforce_toplevel: False
   cmd.run:
-    - name: chmod +x /usr/local/bin/{{ executable }}
+    - name: chmod +x /usr/local/bin/{{ executable }}/gcredstash
     - watch:
-        - module: gcredstash-archive
+        - archive: gcredstash-archive
 
 gcredstash-bin:
   file.symlink:
     - name: /usr/local/bin/gcredstash
-    - target: /usr/local/bin/{{ executable }}
+    - target: /usr/local/bin/{{ executable }}/gcredstash
     - require:
         - file: gcredstash-archive
   cmd.run:

@@ -1,11 +1,10 @@
 # ensure pip is installed, through apt, and salt's modules are reloaded
 # to pin pip version, for example: default_pip_version = "pip<10.0"
-{%- set default_pip_version = "pip==20.2.4" %}
+{%- set default_pip_version = "pip==23.3.2" %}
 {%- set pip_version = salt['pillar.get']('pip_version', default_pip_version) %}
 
 include:
   - python
-
 
 # install pip with easy_install, if it is missing
 pip:

@@ -2,4 +2,6 @@
 # requires that pip is already setup
 aws-cli:
   pip.installed:
-    - name: awscli
+    - bin_env: /usr/local/bin/pip3
+    - pkgs:
+      - awscli

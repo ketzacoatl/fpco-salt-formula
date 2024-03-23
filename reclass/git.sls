@@ -6,4 +6,6 @@ include:
 
 reclass:
   pip.installed:
-    - name: {{ git_url }}
+    - bin_env: /usr/local/bin/pip3
+    - pkgs:
+      - {{ git_url }}

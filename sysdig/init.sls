@@ -12,7 +12,7 @@ sysdig-dependencies:
 
 sysdig:
   pkgrepo.managed:
-    - name: 'deb http://download.draios.com/stable/deb stable-$(ARCH)/'
+    - name: 'deb https://download.sysdig.com/stable/deb stable-$(ARCH)/'
     - humanname: 'Sysdig Apt Repo'
     - file: '/etc/apt/sources.list.d/draios-sysdig.list'
     - key_url: salt://sysdig/files/DRAIOS-GPG-KEY.public

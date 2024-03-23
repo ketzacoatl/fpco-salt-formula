@@ -3,7 +3,7 @@
 
 {%- set opts = salt['pillar.get']('docker:default_opts', '') %}
 {%- set lsb = salt['grains.get']('lsb_distrib_codename') %}
-{%- set default_docker_version = '5:20.10.10~3-0~ubuntu-focal' %}
+{%- set default_docker_version = '5:25.0.5-1~ubuntu.22.04~jammy' %}
 {%- set docker_version = salt['pillar.get']('docker:version', default_docker_version) %}
 {% set docker_pkg_name = 'docker-ce' %}
 
@@ -15,12 +15,13 @@ docker-dependencies:
   pkg.installed:
     - pkgs:
         - apt-transport-https
-        - python-apt
         - iptables
         - ca-certificates
         - lxc
   pip.installed:
-    - name:  docker-py
+    - bin_env: /usr/local/bin/pip3
+    - pkgs:
+      - docker-py
     - require:
         - cmd: pip
         - pkg: docker-dependencies
@@ -28,6 +29,7 @@ docker-dependencies:
 docker-refresh_modules:
   module.wait:
     - name: saltutil.refresh_modules
+    - async: False
     - require:
         - pkg: docker-dependencies
         - pip: docker-dependencies

@@ -26,19 +26,6 @@ docker-dependencies:
         - cmd: pip
         - pkg: docker-dependencies
 
-docker-refresh_modules:
-  module.wait:
-    - name: saltutil.refresh_modules
-    - async: False
-    - require:
-        - pkg: docker-dependencies
-        - pip: docker-dependencies
-        - pkg: docker
-    - watch:
-        - pkg: docker-dependencies
-        - pip: docker-dependencies
-        - pkg: docker
-
 docker:
   group.present:
     - name: docker
@@ -63,8 +50,6 @@ docker:
     - watch:
         - pkg: docker
         - file: docker
-    - require:
-        - module: docker-refresh_modules
   file.managed:
     - name: /etc/default/docker
     - user: root

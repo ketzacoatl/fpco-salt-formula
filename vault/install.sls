@@ -4,7 +4,7 @@
 {% from "vault/checksum_map.jinja" import vault_checksum_map with context %}
 {%- set default_version = '1.3.0' %}
 {%- set version = salt['pillar.get']('vault:version', default_version) %}
-{%- set default_checksum = vault_checksum_map[version] %}
+{%- set default_checksum = vault_checksum_map[default_version] %}
 {%- set checksum = salt['pillar.get']('vault:checksum', default_checksum) %}
 {%- set base_url = 'https://releases.hashicorp.com' %}
 {%- set app = 'vault' %}
